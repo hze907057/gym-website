@@ -48,8 +48,8 @@ New pages: a file at `src/pages/about.astro` becomes the page `/about`.
 
 ## Git and publishing
 
-- Pushing to the `main` branch on GitHub publishes the live site automatically (Cloudflare Workers Builds).
-- Pushing any other branch, or opening a pull request, creates a **preview link** without changing the live site.
+- Work directly on `main`. Don't make branches or pull requests.
+- **After every push to `main`, run `npm run deploy`** to update the live site at https://gym-website.hze907057.workers.dev. (This site is published from this computer, not by Cloudflare Workers Builds.) If it says you're not logged in, help them run `npx wrangler login` and click **Allow** in the browser.
 - When asked to "save" or "publish", commit with a short, clear message and push. Explain: a commit is a save point; push sends it to GitHub.
 - Never force-push or rewrite history unless they explicitly ask and understand what it means.
 - If a Cloudflare build fails, first check that `"name"` in `wrangler.jsonc` matches the Worker name in the Cloudflare dashboard. That mismatch is the most common cause.

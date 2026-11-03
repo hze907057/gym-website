@@ -5,139 +5,96 @@
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { getDecks } from '../lib/decks';
+import { site } from '../site';
 
-const steps = [
+const offers = [
   {
-    icon: '🧰',
-    title: 'Choose a stack',
-    titleKm: 'ជ្រើសរើស stack',
-    text: 'Pick the technology the AI will use. AI can help you choose. This week, it’s chosen for you.',
-    textKm: 'ជ្រើសរើសបច្ចេកវិទ្យាដែល AI នឹងប្រើ។ AI អាចជួយអ្នកជ្រើសរើសបាន។ សម្រាប់វគ្គនេះ យើងបានជ្រើសរើសរួចហើយ។',
+    icon: '🏋️',
+    title: 'Weights & strength',
+    titleKm: 'លើកទម្ងន់ និងកម្លាំង',
+    text: 'Machines and free weights, with a coach to show you good form.',
+    textKm: 'ម៉ាស៊ីន និងទម្ងន់ ជាមួយគ្រូបង្វឹកដែលបង្ហាញអ្នកពីរបៀបធ្វើឱ្យត្រឹមត្រូវ។',
   },
   {
-    icon: '💬',
-    title: 'Prompt',
-    titleKm: 'ប្រាប់ AI',
-    text: 'Describe the website you want, in plain words. English or Khmer.',
-    textKm: 'ពិពណ៌នាគេហទំព័រដែលអ្នកចង់បាន ជាពាក្យសាមញ្ញ។ ភាសាអង់គ្លេស ឬភាសាខ្មែរក៏បាន។',
+    icon: '🏊',
+    title: 'Swimming pool',
+    titleKm: 'អាងហែលទឹក',
+    text: 'A clean pool for laps, lessons, and easy exercise for your joints.',
+    textKm: 'អាងហែលទឹកស្អាត សម្រាប់ហែលទឹក រៀនហែល និងហាត់ប្រាណស្រាលៗសម្រាប់សន្លាក់។',
   },
   {
-    icon: '🔁',
-    title: 'Iterate',
-    titleKm: 'កែលម្អម្តងហើយម្តងទៀត',
-    text: 'Check the result and tell the AI what to improve. Repeat! This is the real skill.',
-    textKm: 'ពិនិត្យលទ្ធផល ហើយប្រាប់ AI ពីអ្វីដែលត្រូវកែ។ ធ្វើម្តងទៀត! នេះគឺជាជំនាញពិតប្រាកដ។',
+    icon: '❤️',
+    title: 'Heart-rate training',
+    titleKm: 'ការហាត់តាមចង្វាក់បេះដូង',
+    text: 'Wear a heart-rate monitor and train in the right zone for your goal.',
+    textKm: 'ពាក់ឧបករណ៍វាស់ចង្វាក់បេះដូង ហើយហាត់ក្នុងកម្រិតដែលត្រូវនឹងគោលដៅរបស់អ្នក។',
   },
   {
-    icon: '🚀',
-    title: 'Ship it',
-    titleKm: 'ដាក់ឱ្យប្រើ',
-    text: 'Publish it to the internet, free, at a link you can share.',
-    textKm: 'ដាក់វានៅលើអ៊ីនធឺណិត ដោយឥតគិតថ្លៃ ជាមួយតំណភ្ជាប់ដែលអ្នកអាចចែករំលែកបាន។',
+    icon: '🙋',
+    title: 'Beginner classes',
+    titleKm: 'ថ្នាក់សម្រាប់អ្នកចាប់ផ្តើម',
+    text: 'Never been to a gym? Start here. Small groups and friendly coaches.',
+    textKm: 'មិនដែលទៅកន្លែងហាត់ប្រាណទេ? ចាប់ផ្តើមនៅទីនេះ។ ក្រុមតូចៗ និងគ្រូបង្វឹករួសរាយ។',
   },
 ];
 
+// TODO: change these to your gym's real facts.
 const stats = [
-  { value: '0', label: 'lines of code to memorize', labelKm: 'បន្ទាត់កូដដែលត្រូវទន្ទេញ' },
-  { value: '1', label: 'live website each', labelKm: 'គេហទំព័រផ្ទាល់ខ្លួនម្នាក់មួយ' },
-  { value: '$0', label: 'to publish it', labelKm: 'ដើម្បីដាក់វាលើអ៊ីនធឺណិត' },
+  { value: '25 m', label: 'swimming pool', labelKm: 'អាងហែលទឹក' },
+  { value: '6–21h', label: 'open every day', labelKm: 'បើករៀងរាល់ថ្ងៃ' },
+  { value: 'Free', label: 'first class', labelKm: 'ថ្នាក់ដំបូងឥតគិតថ្លៃ' },
 ];
 
-const needs = [
-  {
-    title: 'An idea',
-    titleKm: 'គំនិតមួយ',
-    text: 'A business, a project, a club — anything you would want a website for.',
-    textKm: 'អាជីវកម្ម គម្រោង ក្លឹប — អ្វីក៏បានដែលអ្នកចង់មានគេហទំព័រ។',
-  },
-  {
-    title: 'A computer',
-    titleKm: 'កុំព្យូទ័រមួយ',
-    text: 'Mac or Windows. You will set it up yourself, with the AI as your guide.',
-    textKm: 'Mac ឬ Windows។ អ្នកនឹងរៀបចំវាដោយខ្លួនឯង ដោយមាន AI ជាអ្នកណែនាំ។',
-  },
-  {
-    title: 'A GitHub account',
-    titleKm: 'គណនី GitHub',
-    text: 'Free. This is where your website’s files are kept safe. We make it together on Day 1.',
-    textKm: 'ឥតគិតថ្លៃ។ ជាកន្លែងរក្សាទុកឯកសារគេហទំព័ររបស់អ្នកដោយសុវត្ថិភាព។ យើងបង្កើតវាជាមួយគ្នានៅថ្ងៃទី ១។',
-  },
-  {
-    title: 'A Cloudflare account',
-    titleKm: 'គណនី Cloudflare',
-    text: 'Free. This puts your website on the internet.',
-    textKm: 'ឥតគិតថ្លៃ។ វាដាក់គេហទំព័ររបស់អ្នកនៅលើអ៊ីនធឺណិត។',
-  },
-];
+// Heart-rate zones from the simple rule: maximum ≈ 220 − age.
+// Moderate = 50–70% of maximum, hard = 70–85%.
+const zones = [20, 30, 40, 50, 60].map((age) => {
+  const max = 220 - age;
+  return {
+    age,
+    max,
+    moderate: `${Math.round(max * 0.5)}–${Math.round(max * 0.7)}`,
+    hard: `${Math.round(max * 0.7)}–${Math.round(max * 0.85)}`,
+  };
+});
 
-const faqs = [
+const swimReasons = [
   {
-    q: 'Do I need to know how to code?',
-    qKm: 'តើខ្ញុំត្រូវចេះសរសេរកូដទេ?',
-    a: 'No. You will see some code, and you will learn what it is, but the AI writes it. Your job is to know what you want and to say it clearly.',
-    aKm: 'ទេ។ អ្នកនឹងឃើញកូដខ្លះ ហើយនឹងរៀនថាវាជាអ្វី ប៉ុន្តែ AI ជាអ្នកសរសេរវា។ ការងាររបស់អ្នក គឺដឹងថាអ្នកចង់បានអ្វី ហើយនិយាយវាឱ្យបានច្បាស់។',
+    title: 'Works your whole body',
+    titleKm: 'ធ្វើការទាំងខ្លួន',
+    text: 'Arms, legs, and core all work together.',
+    textKm: 'ដៃ ជើង និងពោះ ធ្វើការជាមួយគ្នា។',
   },
   {
-    q: 'Can my website be in Khmer?',
-    qKm: 'តើគេហទំព័ររបស់ខ្ញុំអាចជាភាសាខ្មែរបានទេ?',
-    a: 'Yes. You can ask the AI to write in Khmer, or to make the site in both languages. Always have a Khmer speaker check the words — you know the language better than the AI does.',
-    aKm: 'បាន។ អ្នកអាចប្រាប់ AI ឱ្យសរសេរជាភាសាខ្មែរ ឬធ្វើគេហទំព័រជាពីរភាសា។ តែងតែឱ្យអ្នកចេះភាសាខ្មែរពិនិត្យពាក្យពេចន៍ — អ្នកស្គាល់ភាសានេះច្បាស់ជាង AI។',
+    title: 'Easy on your joints',
+    titleKm: 'ស្រាលលើសន្លាក់',
+    text: 'The water holds you up, so it is gentle on your knees and back.',
+    textKm: 'ទឹកទ្រទ្រង់ខ្លួនអ្នក ដូច្នេះវាស្រាលលើជង្គង់ និងខ្នង។',
   },
   {
-    q: 'Do I keep my website after the workshop?',
-    qKm: 'តើខ្ញុំនៅតែមានគេហទំព័ររបស់ខ្ញុំក្រោយវគ្គសិក្សាទេ?',
-    a: 'Yes. Everything is in your own GitHub and Cloudflare accounts. It is yours, and it stays online.',
-    aKm: 'បាទ/ចាស។ អ្វីៗទាំងអស់នៅក្នុងគណនី GitHub និង Cloudflare ផ្ទាល់ខ្លួនរបស់អ្នក។ វាជារបស់អ្នក ហើយវានៅតែដំណើរការលើអ៊ីនធឺណិត។',
+    title: 'Strong heart and lungs',
+    titleKm: 'បេះដូង និងសួតរឹងមាំ',
+    text: 'Regular swimming helps your heart pump better.',
+    textKm: 'ការហែលទឹកជាប្រចាំ ជួយឱ្យបេះដូងបូមឈាមបានល្អជាងមុន។',
   },
   {
-    q: 'What if the AI makes a mistake?',
-    qKm: 'ចុះបើ AI ធ្វើខុស?',
-    a: 'It will! Tell it what is wrong, the same way you would tell a person. If things get really messy, you can always go back to an earlier version.',
-    aKm: 'វានឹងធ្វើខុសម្តងម្កាល! ប្រាប់វាថាអ្វីខុស ដូចដែលអ្នកប្រាប់មនុស្សម្នាក់។ ប្រសិនបើអ្វីៗរញ៉េរញ៉ៃខ្លាំង អ្នកតែងតែអាចត្រឡប់ទៅកំណែមុនវិញបាន។',
+    title: 'Keeps blood moving',
+    titleKm: 'ធ្វើឱ្យឈាមរត់',
+    text: 'Moving your legs helps your blood flow, which helps prevent clots.',
+    textKm: 'ការធ្វើចលនាជើង ជួយឱ្យឈាមរត់ ដែលជួយការពារកំណកឈាម។',
   },
 ];
 
-const decks = getDecks();
-
-// The "Get started" prompt that students copy into Claude. Each block is one
-// paragraph; the copy buttons join them with blank lines.
-const starterPrompt = [
+const clotTips = [
   {
-    en: 'I’m a student in Cambodia, learning to use Claude Code to build software. My instructor gave me this message to start with.',
-    km: 'ខ្ញុំជាសិស្សនៅកម្ពុជា កំពុងរៀនប្រើ Claude Code ដើម្បីបង្កើតកម្មវិធី។ គ្រូរបស់ខ្ញុំបានផ្តល់សារនេះឱ្យខ្ញុំ សម្រាប់ចាប់ផ្តើម។',
+    text: 'Get up and move every hour when you sit for a long time (work, bus, plane).',
+    textKm: 'ក្រោកឈរ ហើយធ្វើចលនារៀងរាល់ម៉ោង ពេលអ្នកអង្គុយយូរ (ធ្វើការ ជិះឡានក្រុង ជិះយន្តហោះ)។',
   },
   {
-    en: 'Please don’t assume I know anything about programming, or that I speak English well. Use short, simple English, and add a Khmer translation under your messages. If I write in Khmer, reply in Khmer.',
-    km: 'សូមកុំសន្មតថាខ្ញុំចេះអ្វីអំពីការសរសេរកម្មវិធី ឬថាខ្ញុំចេះភាសាអង់គ្លេសច្បាស់។ សូមប្រើភាសាអង់គ្លេសខ្លីៗ និងសាមញ្ញ ហើយបន្ថែមការបកប្រែជាភាសាខ្មែរនៅក្រោមសាររបស់អ្នក។ ប្រសិនបើខ្ញុំសរសេរជាភាសាខ្មែរ សូមឆ្លើយជាភាសាខ្មែរ។',
+    text: 'Exercise often. Walking and swimming are great.',
+    textKm: 'ហាត់ប្រាណជាញឹកញាប់។ ការដើរ និងហែលទឹកល្អណាស់។',
   },
-  {
-    en: 'My instructor made the GitHub template repo teamdandelion/vibe-code-cambodia to help me get started. Please help me, one step at a time:',
-    km: 'គ្រូរបស់ខ្ញុំបានបង្កើត GitHub template repo teamdandelion/vibe-code-cambodia ដើម្បីជួយខ្ញុំចាប់ផ្តើម។ សូមជួយខ្ញុំ ម្តងមួយជំហាន៖',
-  },
-  {
-    en: '1. Set up my computer for software development. It may be a Mac or Windows. (The repo has guides in docs/mac-setup.md and docs/windows-setup.md.)\n2. Make a GitHub account if I don’t have one, and connect it to this computer.\n3. Make my own repo from the template, and get the website running on my computer.\n4. Help me turn it into my own website.',
-    km: '១. រៀបចំកុំព្យូទ័ររបស់ខ្ញុំសម្រាប់ការអភិវឌ្ឍកម្មវិធី។ វាអាចជា Mac ឬ Windows។ (repo មានការណែនាំនៅក្នុង docs/mac-setup.md និង docs/windows-setup.md។)\n២. បង្កើតគណនី GitHub ប្រសិនបើខ្ញុំមិនទាន់មាន ហើយភ្ជាប់វាទៅកុំព្យូទ័រនេះ។\n៣. បង្កើត repo ផ្ទាល់ខ្លួនរបស់ខ្ញុំពី template ហើយធ្វើឱ្យគេហទំព័រដំណើរការនៅលើកុំព្យូទ័ររបស់ខ្ញុំ។\n៤. ជួយខ្ញុំប្តូរវាឱ្យក្លាយជាគេហទំព័រផ្ទាល់ខ្លួនរបស់ខ្ញុំ។',
-  },
-  {
-    en: 'Ask me questions to find out what I’d like to build, and work with me. Explain each step before you do it, and wait for me when I need to do something myself.',
-    km: 'សួរខ្ញុំសំណួរ ដើម្បីដឹងថាខ្ញុំចង់បង្កើតអ្វី ហើយធ្វើការជាមួយខ្ញុំ។ ពន្យល់ជំហាននីមួយៗ មុនពេលអ្នកធ្វើវា ហើយរង់ចាំខ្ញុំ នៅពេលខ្ញុំត្រូវធ្វើអ្វីមួយដោយខ្លួនឯង។',
-  },
-];
-const promptEn = starterPrompt.map((b) => b.en).join('\n\n');
-const promptKm = starterPrompt.map((b) => b.km).join('\n\n');
-
-const startSteps = [
-  {
-    text: 'Install the Claude app and sign in. On Windows, install Git first.',
-    km: 'ដំឡើងកម្មវិធី Claude ហើយចូលគណនី។ នៅលើ Windows សូមដំឡើង Git ជាមុនសិន។',
-    link: { href: '/setup', label: 'How?', labelKm: 'ធ្វើដូចម្តេច?' },
-  },
-  {
-    text: 'Open the Code tab.',
-    km: 'បើកផ្ទាំង Code។',
-  },
-  { text: 'Copy this message, paste it in, and press Enter.', km: 'ចម្លងសារនេះ បិទភ្ជាប់វា ហើយចុច Enter។' },
+  { text: 'Drink enough water.', textKm: 'ផឹកទឹកឱ្យបានគ្រប់គ្រាន់។' },
+  { text: 'Don’t smoke.', textKm: 'កុំជក់បារី។' },
 ];
 ---
 
@@ -147,122 +104,64 @@ const startSteps = [
   <main>
     <!-- HERO -->
     <section class="relative overflow-hidden">
-      <div class="pointer-events-none absolute -top-40 -right-40 size-[36rem] rounded-full bg-sun/25 blur-3xl"></div>
+      <div class="pointer-events-none absolute -top-40 -right-40 size-[36rem] rounded-full bg-sun/20 blur-3xl"></div>
       <div class="pointer-events-none absolute -bottom-40 -left-40 size-[30rem] rounded-full bg-brand/15 blur-3xl"></div>
 
       <div class="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-2">
         <div>
           <p class="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/70 px-3 py-1 text-sm font-medium">
             <span class="size-2 rounded-full bg-leaf"></span>
-            A vibe coding workshop at New Hope Cambodia
+            Gym and swimming pool in Phnom Penh
           </p>
           <h1 class="mt-6 font-display text-5xl leading-[1.02] font-extrabold tracking-tight text-balance sm:text-6xl lg:text-7xl">
-            Build a real website by <span class="text-brand">talking</span> to AI.
+            Train your body. Protect your <span class="text-brand">heart.</span>
           </h1>
-          <p lang="km" class="mt-4 text-xl text-ink/70">បង្កើតគេហទំព័រជាមួយ AI</p>
+          <p lang="km" class="mt-4 text-xl text-ink/70">ហាត់ប្រាណរាងកាយ។ ការពារបេះដូង។</p>
           <p class="mt-6 max-w-xl text-lg text-muted">
-            No coding experience needed. Describe the website you want, watch the AI build it, and publish it to the internet by the end of the week.
-            <span class="km" lang="km">មិនចាំបាច់មានបទពិសោធន៍សរសេរកូដទេ។ ពិពណ៌នាគេហទំព័រដែលអ្នកចង់បាន មើល AI បង្កើតវា ហើយដាក់វានៅលើអ៊ីនធឺណិតត្រឹមចុងសប្តាហ៍។</span>
+            Lift weights, swim laps, and learn to train at the right heart rate. Our coaches help beginners start safely.
+            <span class="km" lang="km">លើកទម្ងន់ ហែលទឹក និងរៀនហាត់ប្រាណតាមចង្វាក់បេះដូងដែលត្រឹមត្រូវ។ គ្រូបង្វឹករបស់យើងជួយអ្នកទើបចាប់ផ្តើម ឱ្យចាប់ផ្តើមដោយសុវត្ថិភាព។</span>
           </p>
           <div class="mt-8 flex flex-wrap gap-3">
-            <a href="#start" class="rounded-full bg-brand px-6 py-3 font-semibold text-paper shadow-lg shadow-brand/25 transition hover:bg-brand-dark">
-              Get started ↓ <span lang="km" class="font-khmer font-normal opacity-80">ចាប់ផ្តើម</span>
+            <a href={site.telegram} class="rounded-full bg-brand px-6 py-3 font-semibold text-paper shadow-lg shadow-brand/25 transition hover:bg-brand-dark">
+              Message us on Telegram <span lang="km" class="font-khmer font-normal opacity-80">ផ្ញើសារ</span>
             </a>
-            <a href="/lesson" class="rounded-full border border-ink/15 bg-white px-6 py-3 font-semibold transition hover:border-ink/40">
-              See the lessons → <span lang="km" class="font-khmer font-normal opacity-60">មេរៀន</span>
+            <a href="#train" class="rounded-full border border-ink/15 bg-white px-6 py-3 font-semibold transition hover:border-ink/40">
+              What we offer ↓ <span lang="km" class="font-khmer font-normal opacity-60">សេវាកម្ម</span>
             </a>
           </div>
         </div>
 
-        <!-- Illustration: a prompt on the left becomes a website on the right -->
+        <!-- Illustration: a heart-rate watch screen and a pool card -->
         <div class="relative" aria-hidden="true">
-          <div class="rounded-2xl bg-ink p-5 font-mono text-sm text-paper shadow-2xl">
-            <div class="mb-4 flex gap-1.5">
-              <span class="size-3 rounded-full bg-brand"></span>
-              <span class="size-3 rounded-full bg-sun"></span>
-              <span class="size-3 rounded-full bg-leaf"></span>
+          <div class="rounded-3xl bg-ink p-6 text-paper shadow-2xl">
+            <div class="flex items-center justify-between text-sm text-paper/60">
+              <span>Heart rate</span>
+              <span class="rounded-full bg-sun/20 px-2 py-0.5 text-sun">Cardio zone</span>
             </div>
-            <p class="text-sun">&gt; Make a website for my family's bakery in Phnom Penh.</p>
-            <p class="mt-1 text-sun">&nbsp;&nbsp;Warm colors, our menu, and a map.</p>
-            <p class="mt-3 text-paper/60">✓ Created homepage</p>
-            <p class="text-paper/60">✓ Added menu with 6 items</p>
-            <p class="text-paper/60">✓ Added map and opening hours</p>
-            <p class="mt-3 animate-pulse">▍</p>
+            <p class="mt-3 flex items-baseline gap-2 font-display text-6xl font-extrabold">
+              <span class="animate-pulse text-brand">♥</span> 128 <span class="text-lg font-semibold text-paper/60">bpm</span>
+            </p>
+            <svg viewBox="0 0 300 60" class="mt-4 w-full" fill="none">
+              <path d="M0 30h70l10-18 14 40 14-34 10 12h52l10-18 14 40 14-34 10 12h72" stroke="#e11d48" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
           </div>
-          <div class="relative -mt-6 mr-2 ml-auto w-60 rotate-[3deg] rounded-xl border border-ink/10 bg-white p-4 shadow-xl sm:w-72">
-            <div class="h-20 rounded-lg bg-gradient-to-br from-sun to-brand"></div>
-            <p class="mt-3 font-display font-bold">Sokha's Bakery</p>
-            <p class="text-xs text-muted">Fresh bread every morning since 1998</p>
-            <div class="mt-3 grid grid-cols-3 gap-2">
-              <div class="h-8 rounded bg-paper"></div>
-              <div class="h-8 rounded bg-paper"></div>
-              <div class="h-8 rounded bg-paper"></div>
-            </div>
+          <div class="relative -mt-6 mr-2 ml-auto w-60 rotate-[3deg] rounded-2xl border border-ink/10 bg-white p-4 shadow-xl sm:w-72">
+            <div class="h-20 rounded-xl bg-gradient-to-br from-sun to-sky-700"></div>
+            <p class="mt-3 font-display font-bold">🏊 Lap swim</p>
+            <p class="text-xs text-muted">20 lengths · 500 m · 18 min</p>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- GET STARTED: the message students paste into Claude -->
-    <section id="start" class="scroll-mt-20 border-t border-ink/10 bg-white">
-      <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[1fr_1.5fr]">
-        <div>
-          <p class="font-semibold text-brand">Get started <span lang="km" class="font-khmer font-normal">· ចាប់ផ្តើម</span></p>
-          <h2 class="mt-2 font-display text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">Send this message to Claude.</h2>
-          <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">ផ្ញើសារនេះទៅ Claude។</p>
-          <p class="mt-4 text-lg text-muted">
-            Claude will help you set up your computer and build your website, one step at a time.
-            <span class="km" lang="km">Claude នឹងជួយអ្នករៀបចំកុំព្យូទ័រ និងបង្កើតគេហទំព័ររបស់អ្នក ម្តងមួយជំហាន។</span>
-          </p>
-          <ol class="mt-8 space-y-4">
-            {
-              startSteps.map((step, i) => (
-                <li class="flex gap-4">
-                  <span class="grid size-8 shrink-0 place-items-center rounded-full bg-brand font-display font-bold text-paper">{i + 1}</span>
-                  <p class="pt-1">
-                    {step.text}{' '}
-                    {step.link && (
-                      <a href={step.link.href} class="font-semibold text-brand underline underline-offset-2">
-                        {step.link.label} <span lang="km" class="font-khmer font-normal">{step.link.labelKm}</span>
-                      </a>
-                    )}
-                    <span class="km text-muted" lang="km">{step.km}</span>
-                  </p>
-                </li>
-              ))
-            }
-          </ol>
-        </div>
-
-        <div class="relative rounded-2xl border-l-4 border-sun bg-paper p-5 pt-16 shadow-xl shadow-ink/5 sm:p-8 sm:pt-16">
-          <div class="absolute top-4 right-4 left-4 flex flex-wrap justify-end gap-2 sm:left-auto">
-            <button type="button" class="prompt-copy rounded-full bg-brand px-4 py-1.5 text-sm font-semibold text-paper transition hover:bg-brand-dark" data-copy={promptEn}>
-              Copy message
-            </button>
-            <button type="button" lang="km" class="prompt-copy rounded-full border border-brand px-4 py-1.5 font-khmer text-sm font-semibold text-brand transition hover:bg-brand hover:text-paper" data-copy={promptKm}>
-              ចម្លងជាភាសាខ្មែរ
-            </button>
-          </div>
-          {
-            starterPrompt.map((block) => (
-              <p class="mb-4 whitespace-pre-line last:mb-0">
-                {block.en}
-                <span class="km text-muted whitespace-pre-line" lang="km">{block.km}</span>
-              </p>
-            ))
-          }
         </div>
       </div>
     </section>
 
     <!-- STATS -->
     <section class="border-y border-ink/10 bg-white">
-      <dl class="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 py-10 sm:px-6 md:grid-cols-3">
+      <dl class="mx-auto grid max-w-6xl grid-cols-3 gap-6 px-4 py-10 sm:px-6">
         {
           stats.map((s) => (
             <div>
               <dt class="sr-only">{s.label}</dt>
-              <dd class="font-display text-4xl font-extrabold text-brand">{s.value}</dd>
+              <dd class="font-display text-3xl font-extrabold text-brand sm:text-4xl">{s.value}</dd>
               <dd class="mt-1 text-sm text-muted">
                 {s.label}
                 <span class="km" lang="km">{s.labelKm}</span>
@@ -273,181 +172,201 @@ const startSteps = [
       </dl>
     </section>
 
-    <!-- HOW IT WORKS -->
-    <section id="how" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-20 sm:px-6 sm:py-28">
-      <p class="font-semibold text-brand">How it works <span lang="km" class="font-khmer font-normal">· របៀបដំណើរការ</span></p>
+    <!-- WHAT WE OFFER -->
+    <section id="train" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-20 sm:px-6 sm:py-28">
+      <p class="font-semibold text-brand">What we offer <span lang="km" class="font-khmer font-normal">· អ្វីដែលយើងផ្តល់ជូន</span></p>
       <h2 class="mt-2 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">
-        Four steps from idea to live website.
+        Everything you need to get strong.
       </h2>
-      <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">បួនជំហាន ពីគំនិតមួយ ទៅជាគេហទំព័រដែលដំណើរការពិតប្រាកដ។</p>
-      <ol class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">អ្វីៗទាំងអស់ដែលអ្នកត្រូវការ ដើម្បីរឹងមាំ។</p>
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {
-          steps.map((s, i) => (
+          offers.map((o) => (
             <li class="rounded-2xl border border-ink/10 bg-white p-6">
-              <div class="flex items-center justify-between">
-                <span class="text-3xl">{s.icon}</span>
-                <span class="font-display text-sm font-bold text-ink/30">0{i + 1}</span>
-              </div>
+              <span class="text-3xl">{o.icon}</span>
               <h3 class="mt-4 font-display text-xl font-bold">
-                {s.title}
-                <span class="km text-base" lang="km">{s.titleKm}</span>
+                {o.title}
+                <span class="km text-base" lang="km">{o.titleKm}</span>
               </h3>
               <p class="mt-2 text-muted">
-                {s.text}
-                <span class="km" lang="km">{s.textKm}</span>
+                {o.text}
+                <span class="km" lang="km">{o.textKm}</span>
               </p>
             </li>
           ))
         }
-      </ol>
+      </ul>
     </section>
 
-    <!-- BIG STATEMENT -->
-    <section class="bg-ink text-paper">
-      <div class="mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 sm:py-28">
-        <p class="font-display text-3xl leading-tight font-bold text-balance sm:text-5xl">
-          AI turns out to be <span class="text-sun">very good at writing code.</span> So the most useful skill now is knowing what to ask for.
-        </p>
-        <p lang="km" class="km mt-6 text-xl sm:text-2xl">
-          AI ពិតជាពូកែសរសេរកូដណាស់។ ដូច្នេះ ជំនាញដែលមានប្រយោជន៍បំផុតនាពេលនេះ គឺការដឹងថាត្រូវស្នើសុំអ្វី។
-        </p>
-      </div>
-    </section>
-
-    <!-- LESSONS -->
-    <section id="lessons" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-20 sm:px-6 sm:py-28">
-      <p class="font-semibold text-brand">Lessons <span lang="km" class="font-khmer font-normal">· មេរៀន</span></p>
-      <h2 class="mt-2 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">Start here.</h2>
-      <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">ចាប់ផ្តើមនៅទីនេះ។</p>
-      <div class="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {
-          decks.map((deck) => (
-            <a
-              href={`/lesson/${deck.slug}`}
-              class="group flex flex-col rounded-2xl border border-ink/10 bg-white p-6 transition hover:-translate-y-1 hover:border-brand hover:shadow-xl"
-            >
-              <span class="font-display text-sm font-bold tracking-wide text-brand uppercase">{deck.eyebrow}</span>
-              <span class="mt-2 font-display text-2xl font-bold">
-                {deck.title.replace(/^[^—]+—\s*/, '')}
-                {deck.titleKm && <span class="km text-lg" lang="km">{deck.titleKm.replace(/^[^—]+—\s*/, '')}</span>}
-              </span>
-              <span class="mt-2 flex-1 text-muted">
-                {deck.subtitle}
-                {deck.subtitleKm && <span class="km" lang="km">{deck.subtitleKm}</span>}
-              </span>
-              <span class="mt-6 font-semibold text-brand">Open slides <span class="inline-block transition group-hover:translate-x-1">→</span> <span lang="km" class="font-khmer font-normal">បើកស្លាយ</span></span>
-            </a>
-          ))
-        }
-        <a
-          href="/setup"
-          class="group flex flex-col rounded-2xl border border-ink/10 bg-white p-6 transition hover:-translate-y-1 hover:border-brand hover:shadow-xl"
-        >
-          <span class="font-display text-sm font-bold tracking-wide text-brand uppercase">Guide</span>
-          <span class="mt-2 font-display text-2xl font-bold">
-            Set up your computer
-            <span class="km text-lg" lang="km">រៀបចំកុំព្យូទ័ររបស់អ្នក</span>
-          </span>
-          <span class="mt-2 flex-1 text-muted">
-            Install the Claude app, then let the AI set up the rest of your computer.
-            <span class="km" lang="km">ដំឡើងកម្មវិធី Claude បន្ទាប់មកឱ្យ AI រៀបចំផ្នែកផ្សេងទៀតនៃកុំព្យូទ័ររបស់អ្នក។</span>
-          </span>
-          <span class="mt-6 font-semibold text-brand">Open the guide <span class="inline-block transition group-hover:translate-x-1">→</span> <span lang="km" class="font-khmer font-normal">បើកការណែនាំ</span></span>
-        </a>
-      </div>
-    </section>
-
-    <!-- WHAT YOU NEED -->
-    <section class="bg-white">
-      <div class="mx-auto grid max-w-6xl gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1fr_1.4fr]">
+    <!-- HEART RATE -->
+    <section id="heart-rate" class="scroll-mt-20 bg-ink text-paper">
+      <div class="mx-auto grid max-w-6xl gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[1fr_1.2fr]">
         <div>
-          <p class="font-semibold text-brand">Before you start <span lang="km" class="font-khmer font-normal">· មុនពេលចាប់ផ្តើម</span></p>
-          <h2 class="mt-2 font-display text-4xl font-extrabold tracking-tight sm:text-5xl">What you need</h2>
-          <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">អ្វីដែលអ្នកត្រូវការ</p>
-          <p class="mt-4 text-lg text-muted">
-            That's the whole list. Everything else, the AI will help you install.
-            <span class="km" lang="km">នោះហើយជាបញ្ជីទាំងមូល។ អ្វីៗផ្សេងទៀត AI នឹងជួយអ្នកដំឡើង។</span>
+          <p class="font-semibold text-brand">Heart rate <span lang="km" class="font-khmer font-normal">· ចង្វាក់បេះដូង</span></p>
+          <h2 class="mt-2 font-display text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">Know your heart rate.</h2>
+          <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">ស្គាល់ចង្វាក់បេះដូងរបស់អ្នក។</p>
+          <p class="mt-6 text-lg text-paper/75">
+            Your heart rate is how many times your heart beats in one minute (bpm). Most adults have a resting heart rate between 60 and 100 bpm.
+            <span class="km" lang="km">ចង្វាក់បេះដូង គឺចំនួនដងដែលបេះដូងរបស់អ្នកលោតក្នុងមួយនាទី (bpm)។ មនុស្សពេញវ័យភាគច្រើន មានចង្វាក់បេះដូងពេលសម្រាក ចន្លោះពី ៦០ ទៅ ១០០ bpm។</span>
+          </p>
+          <p class="mt-4 text-lg text-paper/75">
+            A simple way to guess your maximum: <strong class="text-paper">220 minus your age.</strong>
+            <span class="km" lang="km">វិធីងាយស្រួលដើម្បីប៉ាន់ស្មានចង្វាក់អតិបរមា៖ ២២០ ដកអាយុរបស់អ្នក។</span>
+          </p>
+          <p class="mt-6 rounded-2xl border-l-4 border-sun bg-paper/5 p-4 text-paper/85">
+            New to exercise? Stay in the moderate zone. If you feel chest pain, dizzy, or very short of breath, stop and rest.
+            <span class="km" lang="km">ទើបចាប់ផ្តើមហាត់ប្រាណ? សូមនៅក្នុងកម្រិតមធ្យម។ បើអ្នកឈឺទ្រូង វិលមុខ ឬដកដង្ហើមមិនរួច សូមឈប់ ហើយសម្រាក។</span>
           </p>
         </div>
-        <ul class="grid gap-4 sm:grid-cols-2">
-          {
-            needs.map((n) => (
-              <li class="rounded-2xl bg-paper p-6">
-                <span class="grid size-8 place-items-center rounded-full bg-leaf text-sm font-bold text-paper">✓</span>
-                <h3 class="mt-4 font-display text-lg font-bold">
-                  {n.title}
-                  <span class="km text-base" lang="km">{n.titleKm}</span>
-                </h3>
-                <p class="mt-1 text-muted">
-                  {n.text}
-                  <span class="km" lang="km">{n.textKm}</span>
-                </p>
-              </li>
-            ))
-          }
-        </ul>
+
+        <div class="overflow-hidden rounded-2xl bg-paper text-ink">
+          <table class="w-full text-left">
+            <thead class="bg-white text-sm">
+              <tr>
+                <th class="px-4 py-3">Age <span class="km" lang="km">អាយុ</span></th>
+                <th class="px-4 py-3 text-leaf">Moderate <span class="km" lang="km">មធ្យម</span></th>
+                <th class="px-4 py-3 text-brand">Hard <span class="km" lang="km">ខ្លាំង</span></th>
+                <th class="px-4 py-3">Max <span class="km" lang="km">អតិបរមា</span></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-ink/10 font-display text-lg">
+              {
+                zones.map((z) => (
+                  <tr>
+                    <td class="px-4 py-3 font-bold">{z.age}</td>
+                    <td class="px-4 py-3">{z.moderate}</td>
+                    <td class="px-4 py-3">{z.hard}</td>
+                    <td class="px-4 py-3 text-muted">{z.max}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+          <p class="border-t border-ink/10 px-4 py-3 text-sm text-muted">
+            Beats per minute. Moderate = 50–70% of max. Hard = 70–85% of max.
+            <span class="km" lang="km">ចំនួនដងក្នុងមួយនាទី។ មធ្យម = ៥០–៧០% នៃអតិបរមា។ ខ្លាំង = ៧០–៨៥% នៃអតិបរមា។</span>
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section class="mx-auto max-w-3xl px-4 py-20 sm:px-6 sm:py-28">
-      <h2 class="text-center font-display text-4xl font-extrabold tracking-tight">Questions</h2>
-      <p class="km mt-2 text-center text-xl font-semibold" lang="km">សំណួរ</p>
-      <div class="mt-10 divide-y divide-ink/10 border-y border-ink/10">
+    <!-- SWIMMING -->
+    <section id="swim" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-20 sm:px-6 sm:py-28">
+      <p class="font-semibold text-sun">Swimming <span lang="km" class="font-khmer font-normal">· ហែលទឹក</span></p>
+      <h2 class="mt-2 max-w-2xl font-display text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">
+        Why swimming is great for your heart.
+      </h2>
+      <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">ហេតុអ្វីការហែលទឹកល្អសម្រាប់បេះដូង។</p>
+      <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {
-          faqs.map((f) => (
-            <details class="group py-5">
-              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold">
-                <span>
-                  {f.q}
-                  <span class="km text-base" lang="km">{f.qKm}</span>
-                </span>
-                <span class="text-2xl text-brand transition group-open:rotate-45">+</span>
-              </summary>
-              <p class="mt-3 text-muted">
-                {f.a}
-                <span class="km" lang="km">{f.aKm}</span>
+          swimReasons.map((r) => (
+            <li class="rounded-2xl bg-sun/10 p-6">
+              <span class="grid size-8 place-items-center rounded-full bg-sun text-sm font-bold text-paper">✓</span>
+              <h3 class="mt-4 font-display text-lg font-bold">
+                {r.title}
+                <span class="km text-base" lang="km">{r.titleKm}</span>
+              </h3>
+              <p class="mt-1 text-muted">
+                {r.text}
+                <span class="km" lang="km">{r.textKm}</span>
               </p>
-            </details>
+            </li>
           ))
         }
+      </ul>
+      <p class="mt-8 text-muted">
+        🛟 Never swim alone. Drink water, even in the pool.
+        <span class="km" lang="km">កុំហែលទឹកតែម្នាក់ឯង។ ផឹកទឹក ទោះបីនៅក្នុងអាងហែលទឹកក៏ដោយ។</span>
+      </p>
+    </section>
+
+    <!-- BLOOD CLOTS -->
+    <section id="blood-clots" class="scroll-mt-20 bg-white">
+      <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+        <p class="font-semibold text-brand">Health <span lang="km" class="font-khmer font-normal">· សុខភាព</span></p>
+        <h2 class="mt-2 font-display text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">Blood clots: what to know.</h2>
+        <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">កំណកឈាម៖ អ្វីដែលត្រូវដឹង។</p>
+        <p class="mt-6 max-w-3xl text-lg text-muted">
+          A blood clot is a lump of blood that gets stuck in a vein. It often starts in the leg. If it moves to the lungs, it is an emergency.
+          <span class="km" lang="km">កំណកឈាម គឺជាដុំឈាមដែលកកស្ទះនៅក្នុងសរសៃឈាម។ វាច្រើនចាប់ផ្តើមនៅជើង។ បើវារំកិលទៅសួត វាជាករណីបន្ទាន់។</span>
+        </p>
+
+        <div class="mt-12 grid gap-6 lg:grid-cols-2">
+          <div class="rounded-2xl bg-leaf/10 p-6 sm:p-8">
+            <h3 class="font-display text-2xl font-bold">
+              Lower your risk
+              <span class="km text-lg" lang="km">កាត់បន្ថយហានិភ័យ</span>
+            </h3>
+            <ul class="mt-6 space-y-4">
+              {
+                clotTips.map((t) => (
+                  <li class="flex gap-3">
+                    <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-leaf text-xs font-bold text-paper">✓</span>
+                    <p>
+                      {t.text}
+                      <span class="km text-muted" lang="km">{t.textKm}</span>
+                    </p>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+
+          <div class="rounded-2xl bg-brand/10 p-6 sm:p-8">
+            <h3 class="font-display text-2xl font-bold">
+              Warning signs
+              <span class="km text-lg" lang="km">សញ្ញាព្រមាន</span>
+            </h3>
+            <div class="mt-6 rounded-xl bg-white p-5">
+              <p class="font-semibold">
+                In one leg: swelling, pain, or warm, red skin
+                <span class="km" lang="km">នៅជើងម្ខាង៖ ហើម ឈឺ ឬស្បែកក្តៅ និងក្រហម</span>
+              </p>
+              <p class="mt-2 text-muted">
+                → See a doctor soon.
+                <span class="km" lang="km">→ ទៅជួបគ្រូពេទ្យឱ្យបានឆាប់។</span>
+              </p>
+            </div>
+            <div class="mt-4 rounded-xl bg-brand p-5 text-paper">
+              <p class="font-semibold">
+                Sudden shortness of breath, chest pain, or coughing up blood
+                <span class="km" lang="km">ដកដង្ហើមមិនរួចភ្លាមៗ ឈឺទ្រូង ឬក្អកចេញឈាម</span>
+              </p>
+              <p class="mt-2 font-display text-2xl font-extrabold">
+                → Call 119 now.
+                <span class="km" lang="km">→ ហៅលេខ ១១៩ ភ្លាម។</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p class="mt-8 text-sm text-muted">
+          This page is for learning only. It is not medical advice. Talk to a doctor about your health.
+          <span class="km" lang="km">ទំព័រនេះសម្រាប់ការសិក្សាតែប៉ុណ្ណោះ។ វាមិនមែនជាដំបូន្មានវេជ្ជសាស្ត្រទេ។ សូមពិគ្រោះជាមួយគ្រូពេទ្យអំពីសុខភាពរបស់អ្នក។</span>
+        </p>
       </div>
     </section>
 
     <!-- CALL TO ACTION -->
-    <section class="px-4 pb-20 sm:px-6">
+    <section id="join" class="scroll-mt-20 px-4 py-20 sm:px-6">
       <div class="mx-auto max-w-6xl rounded-3xl bg-brand px-6 py-16 text-center text-paper sm:py-20">
-        <h2 class="font-display text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">Ready? Let's build something.</h2>
-        <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">រួចរាល់ហើយឬនៅ? តោះបង្កើតអ្វីមួយ។</p>
-        <a href="/lesson/day-1" class="mt-8 inline-block rounded-full bg-paper px-8 py-4 font-semibold text-ink transition hover:bg-sun">
-          Start with Day 1 → <span lang="km" class="font-khmer font-normal">ចាប់ផ្តើមថ្ងៃទី ១</span>
-        </a>
+        <h2 class="font-display text-4xl font-extrabold tracking-tight text-balance sm:text-5xl">Your first class is free.</h2>
+        <p class="km mt-3 text-xl font-semibold sm:text-2xl" lang="km">ថ្នាក់ដំបូងរបស់អ្នកឥតគិតថ្លៃ។</p>
+        <p class="mx-auto mt-4 max-w-xl text-lg text-paper/85">
+          Send us a message, and we will find a time for you.
+          <span class="km" lang="km">ផ្ញើសារមកយើង ហើយយើងនឹងរកពេលវេលាសម្រាប់អ្នក។</span>
+        </p>
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
+          <a href={site.telegram} class="inline-block rounded-full bg-paper px-8 py-4 font-semibold text-ink transition hover:bg-sun hover:text-paper">
+            Message on Telegram <span lang="km" class="font-khmer font-normal">ផ្ញើសារតាម Telegram</span>
+          </a>
+          <a href={`mailto:${site.contactEmail}`} class="inline-block rounded-full border border-paper/40 px-8 py-4 font-semibold transition hover:bg-paper/10">
+            Email us <span lang="km" class="font-khmer font-normal">អ៊ីមែល</span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
 
   <Footer />
 </Base>
-
-<script>
-  // "Copy message" buttons on the Get started prompt.
-  for (const button of document.querySelectorAll<HTMLButtonElement>('.prompt-copy')) {
-    const label = button.textContent;
-    button.addEventListener('click', async () => {
-      const text = button.dataset.copy ?? '';
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch {
-        // Older browsers: copy through a hidden text box instead.
-        const box = document.createElement('textarea');
-        box.value = text;
-        document.body.append(box);
-        box.select();
-        document.execCommand('copy');
-        box.remove();
-      }
-      button.textContent = button.lang === 'km' ? 'បានចម្លង ✓' : 'Copied ✓';
-      setTimeout(() => (button.textContent = label), 2000);
-    });
-  }
-</script>
